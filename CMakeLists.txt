@@ -95,6 +95,9 @@ option(BUILD_LIBTIFF_EXT "Build libtiff extensions module" ON)
 option(BUILD_OPENCV_EXT "Build opencv extensions module" ON)
 option(BUILD_PYTHON "Build Python binding" ON)
 option(BUILD_WHEEL "Build python wheel package" ON)
+option(NVIMG_CODEC_USE_SYSTEM_DLPACK "Use system installed dlpack" OFF)
+option(NVIMG_CODEC_USE_SYSTEM_PYBIND "Use system installed pybind11" OFF)
+
 
 cmake_dependent_option(WITH_DYNAMIC_NVJPEG "Dynamically loads nvjpeg at runtime" ON
                       "BUILD_NVJPEG_EXT" OFF)
