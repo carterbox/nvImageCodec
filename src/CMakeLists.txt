@@ -109,18 +109,6 @@ endif()
 
 # Installation (https://github.com/forexample/package-example) {
 
-# Introduce variables:
-# * CMAKE_INSTALL_LIBDIR
-# * CMAKE_INSTALL_BINDIR
-# * CMAKE_INSTALL_INCLUDEDIR
-include(GNUInstallDirs)
-if(UNIX)
-    set(CMAKE_INSTALL_LIBDIR "lib64")  # use lib64 instead of lib
-else()
-    set(CMAKE_INSTALL_LIBDIR "lib")
-endif()
-set(CMAKE_INSTALL_FULL_LIBDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")  # adjust accordingly
-
 # Layout. This works for all platforms:
 #   * <prefix>/cmake/
 #   * <prefix>/lib*/

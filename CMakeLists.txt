@@ -114,6 +114,19 @@ propagate_option(WITH_DYNAMIC_NVJPEG2K)
 
 string(TOLOWER ${CMAKE_SYSTEM_NAME} SYS_NAME)
 
+# Introduce variables:
+# * CMAKE_INSTALL_LIBDIR
+# * CMAKE_INSTALL_BINDIR
+# * CMAKE_INSTALL_INCLUDEDIR
+if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+    if(UNIX)
+        set(CMAKE_INSTALL_LIBDIR "lib64")  # use lib64 instead of lib
+    else()
+        set(CMAKE_INSTALL_LIBDIR "lib")
+    endif()
+endif()
+include(GNUInstallDirs)
+
 if(WIN32)
     set(CPACK_GENERATOR "ZIP")
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
