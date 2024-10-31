@@ -113,7 +113,7 @@ endif()
 #   * <prefix>/cmake/
 #   * <prefix>/lib*/
 #   * <prefix>/include/
-set(config_install_dir "${CMAKE_INSTALL_PREFIX}/cmake")
+set(config_install_dir "${CMAKE_INSTALL_PREFIX}/lib/cmake/nvimgcodec")
 
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
@@ -165,7 +165,7 @@ install(
 #   * <prefix>/cmake/nvimgcodec/nvimgcodecConfigVersion.cmake
 install(
     FILES "${project_config}" "${version_config}"
-    DESTINATION "cmake/nvimgcodec"
+    DESTINATION "${config_install_dir}"
     COMPONENT lib
 )
 
@@ -174,7 +174,7 @@ install(
 install(
     EXPORT "${TARGETS_EXPORT_NAME}"
     NAMESPACE "${namespace}"
-    DESTINATION "cmake/nvimgcodec"
+    DESTINATION "${config_install_dir}"
     COMPONENT lib
 )
 
