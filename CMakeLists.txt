@@ -103,7 +103,7 @@ option(BUILD_PYTHON "Build Python binding" ON)
 option(BUILD_WHEEL "Build python wheel package" ON)
 option(NVIMG_CODEC_USE_SYSTEM_DLPACK "Use system installed dlpack" OFF)
 option(NVIMG_CODEC_USE_SYSTEM_PYBIND "Use system installed pybind11" OFF)
-
+option(NVIMG_CODEC_COPY_LIBS_TO_PYTHON_DIR "Move nvimgcodec from install prefix to the python directory" ON)
 
 cmake_dependent_option(WITH_DYNAMIC_NVJPEG "Dynamically loads nvjpeg at runtime" ON
                       "BUILD_NVJPEG_EXT" OFF)

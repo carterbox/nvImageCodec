@@ -43,7 +43,7 @@ set(PY_NVIMGCODEC_SRCS
     image_buffer_kind.cpp
     code_stream.cpp
     region.cpp)
-    
+
 if(UNIX)
     set(PY_NVIMGCODEC_IMPL_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec)
 else()
@@ -66,50 +66,54 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/MANIFEST.in" DESTINATION "${CMAKE_CURRENT
 file(COPY "${PROJECT_SOURCE_DIR}/Acknowledgements.txt" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY "${PROJECT_SOURCE_DIR}/LICENSE.txt" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
-add_custom_target(copy_libs_to_python_dir ALL DEPENDS nvimgcodec_python)
-add_dependencies(copy_libs_to_python_dir
-    nvimgcodec
-    nvbmp_ext
-    nvpnm_ext)
+if(NVIMG_CODEC_COPY_LIBS_TO_PYTHON_DIR)
 
-if (BUILD_NVJPEG_EXT)
-    add_dependencies(copy_libs_to_python_dir nvjpeg_ext)
-endif()
+    add_custom_target(copy_libs_to_python_dir ALL DEPENDS nvimgcodec_python)
+    add_dependencies(copy_libs_to_python_dir
+        nvimgcodec
+        nvbmp_ext
+        nvpnm_ext)
 
-if (BUILD_NVJPEG2K_EXT)
-    add_dependencies(copy_libs_to_python_dir nvjpeg2k_ext)
-endif()
+    if (BUILD_NVJPEG_EXT)
+        add_dependencies(copy_libs_to_python_dir nvjpeg_ext)
+    endif()
 
-if(BUILD_LIBJPEG_TURBO_EXT)
-    add_dependencies(copy_libs_to_python_dir libjpeg_turbo_ext)
-endif()
+    if (BUILD_NVJPEG2K_EXT)
+        add_dependencies(copy_libs_to_python_dir nvjpeg2k_ext)
+    endif()
 
-if(BUILD_LIBTIFF_EXT)
-    add_dependencies(copy_libs_to_python_dir libtiff_ext)
-endif()
+    if(BUILD_LIBJPEG_TURBO_EXT)
+        add_dependencies(copy_libs_to_python_dir libjpeg_turbo_ext)
+    endif()
 
-if(BUILD_OPENCV_EXT)
-    add_dependencies(copy_libs_to_python_dir opencv_ext)
-endif()
+    if(BUILD_LIBTIFF_EXT)
+        add_dependencies(copy_libs_to_python_dir libtiff_ext)
+    endif()
 
-if(UNIX)
-    add_custom_command(
-        TARGET copy_libs_to_python_dir
-        COMMAND cp "${PROJECT_BINARY_DIR}/src/libnvimgcodec.so.0" "${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec" &&
-        cp "${PROJECT_BINARY_DIR}/extensions/*/*.so*" "${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec/extensions" &&
-        cp -r "${PROJECT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec"
-    )
-else()
-    string(REGEX REPLACE "/" "\\\\" PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
-    string(REGEX REPLACE "/" "\\\\" PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
-    string(REGEX REPLACE "/" "\\\\" CMAKE_CURRENT_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
-    add_custom_command(
-        TARGET copy_libs_to_python_dir
-        COMMAND copy "${PROJECT_BINARY_DIR}\\src\\${CMAKE_BUILD_TYPE}\\nvimgcodec_0.dll" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec" &&
-        copy "${PROJECT_BINARY_DIR}\\python\\${CMAKE_BUILD_TYPE}\\*.pyd" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec" && 
-        for /r  "${PROJECT_BINARY_DIR}\\extensions" %%f in \(*.dll\) do xcopy "%%f" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec\\extensions\\" /Y &&
-        xcopy "${PROJECT_SOURCE_DIR}\\include\\*.*" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec\\include\\" /S /Y )
-endif()
+    if(BUILD_OPENCV_EXT)
+        add_dependencies(copy_libs_to_python_dir opencv_ext)
+    endif()
+
+    if(UNIX)
+        add_custom_command(
+            TARGET copy_libs_to_python_dir
+            COMMAND cp "${PROJECT_BINARY_DIR}/src/libnvimgcodec.so.0" "${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec" &&
+            cp "${PROJECT_BINARY_DIR}/extensions/*/*.so*" "${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec/extensions" &&
+            cp -r "${PROJECT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/nvidia/nvimgcodec"
+        )
+    else()
+        string(REGEX REPLACE "/" "\\\\" PROJECT_BINARY_DIR ${PROJECT_BINARY_DIR})
+        string(REGEX REPLACE "/" "\\\\" PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+        string(REGEX REPLACE "/" "\\\\" CMAKE_CURRENT_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+        add_custom_command(
+            TARGET copy_libs_to_python_dir
+            COMMAND copy "${PROJECT_BINARY_DIR}\\src\\${CMAKE_BUILD_TYPE}\\nvimgcodec_0.dll" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec" &&
+            copy "${PROJECT_BINARY_DIR}\\python\\${CMAKE_BUILD_TYPE}\\*.pyd" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec" &&
+            for /r  "${PROJECT_BINARY_DIR}\\extensions" %%f in \(*.dll\) do xcopy "%%f" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec\\extensions\\" /Y &&
+            xcopy "${PROJECT_SOURCE_DIR}\\include\\*.*" "${CMAKE_CURRENT_BINARY_DIR}\\nvidia\\nvimgcodec\\include\\" /S /Y )
+    endif()
+
+endif(NVIMG_CODEC_COPY_LIBS_TO_PYTHON_DIR)
 
 if(BUILD_WHEEL)
     string(REGEX REPLACE "-" "_" NVIMGCODEC_FLAVOR_UNDERSCORE "${NVIMGCODEC_FLAVOR_MINUS}")
