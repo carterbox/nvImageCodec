@@ -65,7 +65,17 @@ def main():
 
 
     if os.name == 'nt':
-        clang.cindex.Config.set_library_file('C:/Program Files/LLVM/bin/libclang.dll')
+        for libclang_file in [
+            'C:/Program Files/LLVM/bin/libclang.dll',
+            os.path.join(os.environ['BUILD_PREFIX'], 'Library/bin/libclang-13.dll'),
+            os.path.join(os.environ['PREFIX'], 'Library/bin/libclang-13.dll'),
+            os.path.join(os.environ['CONDA_PREFIX'], 'Library/bin/libclang-13.dll'),
+        ]:
+            libclang_file = os.path.abspath(libclang_file)
+            if os.path.isfile(libclang_file):
+                print(f"Found libclang at {libclang_file}")
+                clang.cindex.Config.set_library_file(libclang_file)
+                break
     config = json.load(args.input)
 
     function_impl = """
