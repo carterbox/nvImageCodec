@@ -18,6 +18,7 @@ include(GNUInstallDirs)
 
 if(NOT TARGET nvimgcodec)
     find_package(nvimgcodec REQUIRED)
+    add_library(nvimgcodec ALIAS nvimgcodec::nvimgcodec)
 endif()
 
 if(UNIX)
