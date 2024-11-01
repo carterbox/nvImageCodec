@@ -16,6 +16,10 @@
 include(Utils)
 include(GNUInstallDirs)
 
+if(NOT TARGET nvimgcodec)
+    find_package(nvimgcodec REQUIRED)
+endif()
+
 if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fvisibility=hidden")
 endif()
