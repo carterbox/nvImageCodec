@@ -87,13 +87,7 @@ option(BUILD_CVCUDA_SAMPLES "Build CVCUDA samples" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_EXTENSIONS "Build extensions modules" ON)
 option(BUILD_NVJPEG_EXT "Build nvjpeg extensions module" ON)
-if(BUILD_NVJPEG_EXT AND NOT BUILD_LIBRARY)
-    message(FATAL_ERROR "BUILD_LIBRARY must be enabled if BUILD_NVJPEG_EXT is enabled. The NVJPEG extension links to libimgcodec_static.")
-endif()
 option(BUILD_NVJPEG2K_EXT "Build nvjpeg2k extensions module" ON)
-if(BUILD_NVJPEG2K_EXT AND NOT BUILD_LIBRARY)
-    message(FATAL_ERROR "BUILD_LIBRARY must be enabled if BUILD_NVJPEG2K_EXT is enabled. The NVJPEG2K extension links to libimgcodec_static.")
-endif()
 option(BUILD_NVBMP_EXT "Build nvbmp extensions module" ON)
 option(BUILD_NVPNM_EXT "Build nvpnm extensions module" ON)
 option(BUILD_LIBJPEG_TURBO_EXT "Build libjpeg-turbo extensions module" ON)
@@ -104,13 +98,6 @@ option(BUILD_WHEEL "Build python wheel package" ON)
 option(NVIMG_CODEC_USE_SYSTEM_DLPACK "Use system installed dlpack" OFF)
 option(NVIMG_CODEC_USE_SYSTEM_PYBIND "Use system installed pybind11" OFF)
 option(NVIMG_CODEC_COPY_LIBS_TO_PYTHON_DIR "Move nvimgcodec from install prefix to the python directory" ON)
-
-cmake_dependent_option(WITH_DYNAMIC_NVJPEG "Dynamically loads nvjpeg at runtime" ON
-                      "BUILD_NVJPEG_EXT" OFF)
-propagate_option(WITH_DYNAMIC_NVJPEG)
-cmake_dependent_option(WITH_DYNAMIC_NVJPEG2K "Dynamically loads nvjpeg2k at runtime" ON
-                      "BUILD_NVJPEG2K_EXT" OFF)
-propagate_option(WITH_DYNAMIC_NVJPEG2K)
 
 string(TOLOWER ${CMAKE_SYSTEM_NAME} SYS_NAME)
 
@@ -255,6 +242,10 @@ include_directories(
 include(Dependencies)
 
 add_subdirectory(external)
+
+if(BUILD_LIBRARY OR BUILD_PYTHON OR BUILD_EXTENSIONS OR BUILD_TEST)
+    add_subdirectory(src/dynlink)
+endif()
 
 if(BUILD_LIBRARY)
     add_subdirectory(src)
